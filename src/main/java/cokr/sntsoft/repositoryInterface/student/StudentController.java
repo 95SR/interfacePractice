@@ -30,6 +30,7 @@ public class StudentController {
         if(students.isEmpty()){
             response.setStatus(204);
             response.setData(null);
+            
         } else{
             response.setData(students);
         }
@@ -43,7 +44,8 @@ public class StudentController {
         StudentResponse response = new StudentResponse();
         response.setData(student);
         if(student == null){
-            response.setStatus(204);
+            response.setStatus(404);
+            response.setError("No students found");
         }
 
         return response;
@@ -51,7 +53,16 @@ public class StudentController {
 
     @PostMapping("/students")
     public StudentResponse addStudent(@RequestBody Student student){
-        return null;
+        StudentResponse response = new StudentResponse();
+        Student newStudent = service.addStudent(student);
+        response.setData(newStudent);
+        if(newStudent == null){
+            response.setStatus(409);
+            response.setError("Duplicate student id");
+        }
+
+
+        return response;
     }
 
     @DeleteMapping("/student/{id}")
